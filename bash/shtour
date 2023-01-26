@@ -1,0 +1,67 @@
+#!/bin/bash
+PROGDIR=`dirname $0`
+function show {
+	while read file; do
+		echo $file
+	done<  <(find $PROGDIR  -type f -name '*.sh' | awk -F '/' '{print $NF}')
+}
+function gvim   { local HOME="C:\vim"; local TMP=C:\tmp; cygstart /cygdrive/c/vim/vim74/gvim $(cygpath -w $1); }
+
+action=1
+function run_by_num {
+	test_num=$1
+	shift
+	while read file; do
+		if [[ $file =~ ^test([[:digit:]]+)_ ]]; then
+			if [[ ${BASH_REMATCH[1]#0} -eq $test_num ]]; then
+				if [[ $action == "1" ]]; then
+					$PROGDIR/$file "$@"; return $?
+				else
+					gvim $PROGDIR/$file
+				fi
+			fi
+		fi
+	done< <(find $PROGDIR  -type f -name '*.sh' | awk -F '/' '{print $NF}')
+}
+
+function run_by_name {
+	test_name=$1
+	shift
+	while read file; do
+		if [[ $file =~ ^test([[:digit:]]+)_([[:alnum:]_]+)\.sh ]]; then
+			if [[ ${BASH_REMATCH[2]} == $test_name ]]; then
+				if [[ $action == "1" ]]; then
+					$PROGDIR/$file "$@"; return $?
+				else
+					gvim $PROGDIR/$file
+				fi
+			fi
+		fi
+	done < <(find $PROGDIR  -type f -name '*.sh' | awk -F '/' '{print $NF}')
+}
+if [ $# -eq 0 ]; then
+	show
+else 
+	params=()
+	for((i=1; i <= $#; i++)); do
+		if [[ ${!i} == "--gvim"  ]]; then
+			action=2
+			shift $i
+			break
+		else
+			params+=("${!i}")
+		fi
+	done
+	for((; i <= $#; i++)); do # add the un-parsed params
+		params+=("${!i}")
+	done
+	if [[ ${#params[@]} -eq 0 ]]; then
+		gvim "$0"	
+	elif [[ ${params[0]} =~ ^([[:digit:]]+)$ ]]; then
+		run_by_num "${params[@]}"
+	else
+		run_by_name "${params[@]}"
+	fi
+fi
+
+
