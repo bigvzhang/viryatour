@@ -4,7 +4,7 @@ NMAE
      var.sh - test variable declaration, substitutions 
 SYNOPSIS
      var.sh [--subs-qm|subs|declare|local|nameref]
-	 var.sh [--help|-h]
+     var.sh [--help|-h]
 DESCRIPTION
      --subs-qm substition in the form containing question mark 
      --subs    substition exception the form containing question mark
@@ -29,13 +29,14 @@ function test_subs {
 	echo ${C}
 }
 
-	function print_ {
-		let v0+=100	
-		let v1+=1
-		let v2+=2
-		echo "v0:$v0 v1:$v1 v2:$v2 v3:$v3 v4:$v4 v5:$v5"
-		declare -p v0 v1 v2 v3 v4 v5
-	}
+function print_ { # assistant function to print some varialbes
+	let v0+=100	
+	let v1+=1
+	let v2+=2
+	echo "v0:$v0 v1:$v1 v2:$v2 v3:$v3 v4:$v4 v5:$v5"
+	declare -p v0 v1 v2 v3 v4 v5
+}
+
 function test_declare {
 	declare -x v0=100
 	           v1=1
@@ -48,19 +49,22 @@ function test_declare {
 	prompt_t1 "first call"
 	print_
 	prompt "v0:$v0"
+
 	prompt_t1 "call in sub"
 	(print_)
 	prompt "v0:$v0"
+
 	prompt_t1 "second call"
 	print_
 	prompt "v0:$v0"
 
-    auxifile=${PROGNAME/test[[:digit:]]*_/}
-	echo $auxifile
+
+	auxifile=${PROGNAME%.sh}_au.sh
+
 	prompt_t1 "call a shell file"
-	$PROGDIR/${PROGNAME/test[[:digit:]]*_/}
+	$PROGDIR/$auxifile
 	prompt_t1 "call a shell file directly(in the current shell)"
-	. $PROGDIR/${PROGNAME}
+	. $PROGDIR/$auxifile
 	draw_line
 }
 
