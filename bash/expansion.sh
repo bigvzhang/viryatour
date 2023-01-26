@@ -58,13 +58,15 @@ ENTRIES
            ${parameter##word}
          - ${parameter%word}
            ${parameter%%word}
-         - ${paremter/pattern/string}
-           ${paremter//pattern/string}
-         - ${paremter^pattern}
-           ${paremter^^pattern}
-           ${paremter,pattern}
-           ${paremter,,pattern}
-         - ${paremter@operator}
+         - ${parameter/pattern/string}
+           ${parameter//pattern/string}
+           ${parameter/#pattern/string}
+           ${parameter/%pattern/string}
+         - ${parameter^pattern}
+           ${parameter^^pattern}
+           ${parameter,pattern}
+           ${parameter,,pattern}
+         - ${parameter@operator}
     -. command expansion
        - $(command) == `command`
        - $(< file)  faster $(cat file)
