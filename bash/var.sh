@@ -54,10 +54,13 @@ function test_declare {
 	prompt_t1 "second call"
 	print_
 	prompt "v0:$v0"
-	prompt_t1 "call a exe file"
-	$PROGDIR/.${PROGNAME}
-	prompt_t1 "call a exe file directly(in the current shell)"
-	. $PROGDIR/.${PROGNAME}
+
+    auxifile=${PROGNAME/test[[:digit:]]*_/}
+	echo $auxifile
+	prompt_t1 "call a shell file"
+	$PROGDIR/${PROGNAME/test[[:digit:]]*_/}
+	prompt_t1 "call a shell file directly(in the current shell)"
+	. $PROGDIR/${PROGNAME}
 	draw_line
 }
 
