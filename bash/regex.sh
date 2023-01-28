@@ -81,15 +81,15 @@ function awk_regex {
 	do
 		printf "  %-10s \n" "$1"
 		awk -v regex=$regex '{s=$0; i=1; idx=0; 
-			   while(i>0){ 
-				   i=match(s, regex); 
-				   if(i>0) {
-						  idx += i;
-						  printf("    %s %s\n", idx, RLENGTH); 
-						  s=substr(s, i+RLENGTH);
-						  idx += RLENGTH-1
-				   }
+		   while(i>0){ 
+			   i=match(s, regex); 
+			   if(i>0) {
+					  idx += i;
+					  printf("    %s %s\n", idx, RLENGTH); 
+					  s=substr(s, i+RLENGTH);
+					  idx += RLENGTH-1
 			   }
+		   }
 		}' <<< $1
 		shift
 	done
